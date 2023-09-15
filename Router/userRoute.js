@@ -22,7 +22,7 @@ const upload = multer({
 const router = express.Router()
 
 
-
+router.get("/",(req,res)=>{res.send("hello iam awailable")})
 router.post("/login",userRoutes.login)
 router.post("/signup",userRoutes.signup)
 router.get("/authUser",userProtect,userRoutes.authUser)
@@ -35,4 +35,6 @@ router.post("/password",userProtect,userRoutes.password)
 router.post("/changeDp",userProtect,upload.single('image') ,userRoutes.changeDp)
 router.post("/forgotPassword",userRoutes.forgotPassword)
 router.post("/changePassword",userRoutes.changePassword)
+router.post("/sentMessage",userProtect,userRoutes.sentMessage)
+router.get("/userList",userProtect,userRoutes.userList)
 module.exports = router

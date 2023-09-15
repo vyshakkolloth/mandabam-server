@@ -19,16 +19,26 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 const io=new Server(server,{
   cors: {
-    origin:"http://localhost:5173/",
+    origin:"http://localhost:5173",
     methods:["GET","POST"]
   }
 })
 io.on("connection",(socket)=>{
+  // console.log(socket);
   console.log(socket.id)
+  socket.on("join_room",(data)=>{
+    socket.join(data)
+    console.log("id",socket.id,"data",data);
+  })
 
   socket.on("disconnect",()=>{
     console.log("user disconnected",socket.id);
   })
+  socket.on("sent_Message",(data)=>{
+    console.log(data);
+    socket.to(data.room).emit("recieve",data.message)
+  })
+
 
 })
 
@@ -45,6 +55,7 @@ app.use("/venue",venueRoutes)
 
 // database===================
 const mongoose = require('mongoose');
+const { emit } = require('process');
 
 mongoose.set('strictQuery',true)
 mongoose.connect(process.env.mongo).then(()=>console.log("mongoose connected"))

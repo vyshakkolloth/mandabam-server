@@ -4,6 +4,7 @@ const BookingModel=require("../Model/bookingModel")
 const cloudinary= require("../config/config")
 const UserModel = require("../Model/userModel");
 const bcrypt = require("bcrypt");
+const ChatModel= require("../Model/chatSchema")
 
 //--------------------------
 const login = async (req, res) => {
@@ -174,7 +175,7 @@ const enquire=async(req,res)=>{
   try {
     const id=  req?.userId
     const data=await  BookingModel.find({userId:id})
-    console.log(data)
+    // console.log(data)
     if(!data.length==0){
       console.log("approve")
       return res.status(200).json({data}) 
@@ -302,7 +303,7 @@ res.status(200).json({status:200,message:"all good"})
 
 const forgotPassword=async(req,res)=>{
   try {
-    console.log(req.body)
+    // console.log(req.body)
     const data=req.body.data
     const result =await UserModel.findOne({phone:data})
     if(result){
@@ -342,6 +343,40 @@ const changePassword=async(req,res)=>{
     res.status(500).json({message:error})
   }
 }
+const sentMessage=async(req,res)=>{
+  try {
+    const id=  req?.userId
+    const vid=req.body?.data
+     await ChatModel.create({user:id,venue:vid})
+    
+    
+res.status(200).json({message:"full"})
+    
+  } catch (error) {
+    res.status(500).json({message:"sentMessage error", error:error})
+  }
+}
 
-
-module.exports = { login, signup,venueDetail,booking ,profile,enquire,search,password,authUser,changeDp,forgotPassword,changePassword};
+const userList=async(req,res)=>{
+  try {
+    // console.log("yew");
+    const id=  req?.userId
+    const data=await ChatModel.find({user:id}).populate({
+      path: "venue",
+      select: "name" // Replace fieldName1 and fieldName2 with the actual fields you want to retrieve
+    })
+    .exec();
+    // console.log(data);
+    if(data){
+      res.status(200).json({message:"userList",data:data})
+    }else{
+      res.status(202).json({message:"no data"})
+    }
+   
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({message:"userList error", error:error})
+  }
+}
+module.exports = { login, signup,venueDetail,booking ,userList,profile,enquire,search,password,
+  authUser,changeDp,forgotPassword,changePassword,sentMessage};
