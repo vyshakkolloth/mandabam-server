@@ -1,8 +1,12 @@
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
+const cloudinary= require("../config/config")
+const uploader = require('cloudinary').v2
+const fs = require("fs");
 
 const venueModel = require("../Model/venueModel");
 const BookingModel= require("../Model/bookingModel")
+const ChatModel=require("../Model/chatSchema")
 
 const signUp = async (req, res) => {
   try {
@@ -43,7 +47,7 @@ const signUp = async (req, res) => {
       res.json({ status: 200 });
     }
   } catch (error) {
-    res.json({status:401,message:error})
+    res.status(500).json({status:401,message:error})
     console.log(error);
   }
 };
@@ -78,7 +82,7 @@ const login = async (req, res) => {
       res.json({ status: 401, auth: false, message: "user does not exist" });
     }
   } catch (error) {
-    res.json({ status: 500, message: "server error" ,error});
+    res.status(500).json({ status: 500, message: "server error" ,error});
   }
 };
 
@@ -89,17 +93,23 @@ const home = async (req, res) => {
     res.json({ status: 200 });
   } catch (error) {
     console.log(error)
+    res.status(500).json({ status: 500, message: "server error" ,error});
   }
 };
 
 const information = async (req, res) => {
-  const id = req.Venue_id;
+  try {
+    const id = req.Venue_id;
   const data = await venueModel.findById({ _id: id });
   // console.log(data);
   res.json({ message: "fine", status: 200, data: data });
+  } catch (error) {
+    res.status(500).json({  message: "server error" ,error});
+  }
 };
 
 const postInformation = async (req, res) => {
+try {
   const id = req.Venue_id;
   console.log(id);
   const {
@@ -151,7 +161,43 @@ const postInformation = async (req, res) => {
   } else {
     res.json({ status: 401, message: "somthing with update" });
   }
+} catch (error) {
+  console.log(error)
+  res.status(500).json({  message: "server error" ,error});
+}
 };
+
+
+const VenueGallery=async(req,res)=>{
+  try {
+    const uploadedFiles = req.files;
+    const id = req.Venue_id;
+    let uploadedImages = [];
+    // console.log(req.files)
+    if (uploadedFiles) {
+      for (const file of uploadedFiles) {
+        const upload = await cloudinary.uploader.upload(file.path);
+        uploadedImages.push(upload.secure_url);
+
+        // Delete
+        fs.unlinkSync(file.path);
+      }
+    }
+// console.log(uploadedImages)
+   const update= await venueModel.findByIdAndUpdate(id,{$push:{image:{$each:uploadedImages}}})
+    // console.log(update)
+    if(update){
+      res.status(200).json({message:"all good"})
+    }else{
+      res.status(202).json({message:"not updated"})
+    }
+    
+    
+  } catch (error) {
+    console.log(error)
+    res.status(500).json({  message: "server error" ,error});
+  }
+}
 
 const project = async (req, res) => {
   try {
@@ -194,9 +240,15 @@ const getImages = async (req, res) => {
 const booking = async(req,res)=>{
   try {
     const id = req.Venue_id;
-    const data=await  BookingModel.find({venueId:id})
+    const currentDate = new Date();
+    const data=await  BookingModel.find({venueId:id,date: { $gte: currentDate },payment:false})
     // console.log(data)
-    res.status(200).json({data})
+    if(data){
+      res.status(200).json({data})
+    }else{
+      res.status(402).json({message:"not found"})
+    }
+   
 
     
   } catch (error) {
@@ -213,7 +265,7 @@ const changeBooking=async(req,res)=>{
       // Check if a result was found
       const newStatus = !result.status; // Toggle the status
 
-      await BookingModel.findByIdAndUpdate(id, { $set: { "status": newStatus } });
+      await BookingModel.findByIdAndUpdate(id, { $set: { "status": false ,amount:""} });
       res.json({ status: 200, message: "Booking status changed" });
     } else {
       res.status(404).json({ message: "Booking not found" });
@@ -237,7 +289,7 @@ const authVenue=async (req,res)=>{
         res.json({ auth: false, status: "error", message:"user is banned" });
       }else{
         res.json({
-          auth: true,
+          auth: true,data:result
         })
       }
 
@@ -250,6 +302,86 @@ const authVenue=async (req,res)=>{
   }
 }
 
-module.exports = { signUp, login, home, information,
-   postInformation, project ,getImages,
+const userList= async(req,res)=>{
+  try {
+    const id = req.Venue_id;
+    const result= await ChatModel.find({venue:id}).populate({
+      path: "user",
+      select: "name" 
+    })
+    // console.log(result,"res");
+    res.status(200).json({message:"je",data:result})
+    // console.log("object");
+
+    
+  } catch (error) {
+     console.log(error)
+    res.status(500).json({message:" error in booking", error})
+    
+  }
+}
+
+const PreviousEnquire= async(req,res)=>{
+  try{
+    // console.log("ddhjf")
+    const id = req.Venue_id;
+    const currentDate = new Date();
+    const data=await  BookingModel.find({venueId:id,date: { $lte: currentDate },payment:false})
+    // console.log(data)
+    if(data){
+      res.status(200).json({data})
+    }else{
+      res.status(402).json({message:"not found"})
+    }
+   
+
+  }catch (error) {
+     console.log(error)
+    res.status(500).json({message:" error in PreviousBooking", error})
+    
+  }
+}
+const ConfirmEnquire= async(req,res)=>{
+  try{
+    // console.log("ddhjf")
+    const id = req.Venue_id;
+    const currentDate = new Date();
+    const data=await  BookingModel.find({venueId:id,payment:true})
+    // console.log(data)
+    if(data){
+      res.status(200).json({data})
+    }else{
+      res.status(402).json({message:"not found"})
+    }
+   
+
+  }catch (error) {
+     console.log(error)
+    res.status(500).json({message:" error in PreviousBooking", error})
+    
+  }
+}
+const VenueImageDelete=async(req,res)=>{
+  try {
+    const id = req.Venue_id;
+    // console.log(req.body?.data)
+    let toDelete=req.body?.data
+    const venue= await venueModel.findById(id)
+    if(venue){
+      venue.image=venue.image.filter(image=>image!== toDelete)
+      await venue.save()
+    }
+
+    res.status(200).json({message:"454"})
+    
+  } catch (error) {
+    console.log(error)
+    res.status(500).json({message:" error in VenueImageDelete ", error})
+  }
+}
+
+
+
+module.exports = { signUp, login, home, information,PreviousEnquire,VenueGallery,
+   postInformation, project ,getImages,userList,ConfirmEnquire,VenueImageDelete,
    authVenue,booking,changeBooking};

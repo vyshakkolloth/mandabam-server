@@ -16,11 +16,13 @@ const chatSchema = new mongoose.Schema(
           text: {
             type: String,
             required: true,
-          },
-          ID:{
-            type:mongoose.Schema.Types.ObjectId,
-            ref:'user'
-          },
+          }, 
+           senderType: {
+          type: String,
+          enum: ["user", "venue"],
+          required: true,
+        },
+         
           is_read: {
             type: Boolean,
             default: false

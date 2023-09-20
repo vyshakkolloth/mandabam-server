@@ -1,4 +1,6 @@
 const jwt = require("jsonwebtoken");
+const fs = require("fs");
+
 const VenueModel=require("../Model/venueModel")
 const BookingModel=require("../Model/bookingModel")
 const cloudinary= require("../config/config")
@@ -174,7 +176,7 @@ const profile= async (req,res)=>{
 const enquire=async(req,res)=>{
   try {
     const id=  req?.userId
-    const data=await  BookingModel.find({userId:id})
+    const data=await  BookingModel.find({userId:id,payment: false })
     // console.log(data)
     if(!data.length==0){
       console.log("approve")
@@ -253,7 +255,7 @@ const authUser=async(req,res)=>{
         res.json({ auth: false, status: "error", message:"user is banned" });
       }else{
         res.json({
-          auth: true,
+          auth: true,data:result
         })
       }
 
@@ -267,6 +269,7 @@ const authUser=async(req,res)=>{
 const uploader = require('cloudinary').v2
 const changeDp= async(req,res)=>{
   try {
+    console.log("g")
     const id=  req?.userId
   if(!req.file){
   return res.status(404).json({message:"no file"})
@@ -291,7 +294,7 @@ const changeDp= async(req,res)=>{
     { new: true }
   );
 // console.log(user)
-res.status(200).json({status:200,message:"all good"})
+ return res.status(200).json({status:200,message:"all good"})
 
   
   
@@ -343,14 +346,25 @@ const changePassword=async(req,res)=>{
     res.status(500).json({message:error})
   }
 }
+// ======add chat
 const sentMessage=async(req,res)=>{
   try {
     const id=  req?.userId
     const vid=req.body?.data
-     await ChatModel.create({user:id,venue:vid})
+    const result=await ChatModel.findOne({user:id,venue:vid})
+    if(!result){
+
+    await ChatModel.create({user:id,venue:vid})
+    res.status(200).json({message:"full"})
+    }else{
+      res.status(204).json({message:"already exist"})
+      // console.log("false");
+    }
+    // console.log(result,"result")
+   
     
     
-res.status(200).json({message:"full"})
+
     
   } catch (error) {
     res.status(500).json({message:"sentMessage error", error:error})
@@ -363,7 +377,7 @@ const userList=async(req,res)=>{
     const id=  req?.userId
     const data=await ChatModel.find({user:id}).populate({
       path: "venue",
-      select: "name" // Replace fieldName1 and fieldName2 with the actual fields you want to retrieve
+      select: "name image"// Replace fieldName1 and fieldName2 with the actual fields you want to retrieve
     })
     .exec();
     // console.log(data);
@@ -378,5 +392,25 @@ const userList=async(req,res)=>{
     res.status(500).json({message:"userList error", error:error})
   }
 }
-module.exports = { login, signup,venueDetail,booking ,userList,profile,enquire,search,password,
+const datePicker=async(req,res)=>{
+  try{
+
+    // console.log(req.body.data)
+    let venueId=req.body.data
+    const date = await BookingModel.find({
+      venueId: venueId,
+      payment: true,
+    }).distinct('date');
+    res.status(200).json({message:"hello",date})
+
+  }catch(error){
+    console.log(error);
+    res.status(500).json({message:"userList error", error:error})
+  }
+}
+module.exports = { login, signup,venueDetail,booking ,userList,profile,
+  enquire,search,password,datePicker,
   authUser,changeDp,forgotPassword,changePassword,sentMessage};
+
+
+  

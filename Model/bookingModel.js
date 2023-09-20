@@ -45,13 +45,23 @@ const Booking = new mongoose.Schema({
         type:String,
          require:true
     },date:{
-        type:String
+        type:Date
     },status:{
         type:Boolean,
         default:false
     },proceed:{
         type:Boolean,
         default:false
+    },
+    amount:{
+        type:Number
+
+    },payment:{
+        type:Boolean,
+        default:false
+
+    },paymentId:{
+        type:String
     }
 
     
