@@ -118,28 +118,25 @@ console.log(req.adminId)
 }
  
 
-// module.exports.isAdminAuth = async (req, res) => {
-//   try {
-//     let admin = await adminModel.findById(req.adminId);
-
-//     const admindetails = {
-//       email: admin.email,
-//     };
-//     res.json({
-//       auth: true,
-//       result: admindetails,
-//       status: "success",
-//       message: "signin success",
-//     });
-//   } catch (error) {
-//     res.status(400).json({ auth: false, message: error.message });
-//   }
-// };
-
-module.exports.g
+const adminVenueVerification = async (req,res)=>{
+  try { 
+    console.log("admin working")
+    const result = await VenueModel.find()
+    if(result){
+      res.status(200).json({result})
+    }else{
+      res.status(402).json({message:"error result not find"})
+    }
+   
+    
+  } catch (error) {
+    console.log(error)
+    res.status(500).json({message:"serrver error",error})
+  }
+}
 
 
 
 
 
-module.exports = { login ,userData,venueDatas,blockUser,blockVendor,adminAuth};
+module.exports = { login ,userData,venueDatas,blockUser,blockVendor,adminAuth,adminVenueVerification};

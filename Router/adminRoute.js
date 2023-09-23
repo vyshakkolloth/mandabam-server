@@ -10,6 +10,7 @@ router.get("/venueData",adminProtect,adminControll.venueDatas)//
 router.get('/blockUser/:id',adminProtect,adminControll.blockUser)
 router.get('/blockVendor/:id',adminProtect,adminControll.blockVendor)
 router.get("/adminAuth",adminProtect,adminControll.adminAuth)
+router.get("/adminVenueVerification",adminProtect,adminControll.adminVenueVerification)
 
 
 module.exports = router

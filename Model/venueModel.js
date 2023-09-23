@@ -1,5 +1,12 @@
 const mongoose = require("mongoose");
 const Venue = new mongoose.Schema({
+  show:{
+    type:Boolean,
+    default:false
+  },adminAproved:{
+type:Boolean
+,default:false
+  },
   name: {
     type: String,
     required: true,
