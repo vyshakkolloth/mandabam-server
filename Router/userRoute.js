@@ -2,6 +2,7 @@ const express = require('express')
 const userRoutes = require('../controller/userController')
 const chatController= require("../controller/chatController")
 const bookingController=require("../controller/bookingController")
+const reviewController=require("../controller/ReviewController")
 const{userProtect}=require("../Middleware/auth")
 
 
@@ -45,4 +46,6 @@ router.post("/postuserMessage",userProtect,chatController.PostuserMessage)
 router.post("/paymentCreate",userProtect,bookingController.paymentCreate)
 router.post("/paymentVerify",userProtect,bookingController.paymentVerify)
 router.post("/datePicker",userProtect,userRoutes.datePicker)
+router.post("/postReview",userProtect,reviewController.postReview)
+router.get("/getReview/:id",reviewController.getReview)
 module.exports = router

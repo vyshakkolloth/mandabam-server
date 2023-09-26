@@ -131,7 +131,7 @@ const venueDetail= async(req,res)=>{
   } catch (error) {
     console.log(error,"+++err message")
 
-    res.data({status:401,error:error})
+    res.status(200).json({status:401,error:error})
     
   }
 }
