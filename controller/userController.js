@@ -20,7 +20,9 @@ const login = async (req, res) => {
         expiresIn: "5d",
         });
       if(req.body.type==="google"&&req.body.data.azp===process.env.GOOGLE_AUTH) {
+
         res.json({status:200,message:"loged in using google auth",token:token,result:user})
+        
         console.log("google login")
       }else if(req.body.type==="email"){
         
@@ -198,7 +200,7 @@ const search=async(req,res)=>{
   try {
     const name = req.params.id;
     
-    const data= await VenueModel.find({location:name})
+    const data= await VenueModel.find({location:name,adminAproved:true})
     // console.log(name,data.length)
     if(!data.length == 0){
       // console.log(data,"888")
@@ -269,7 +271,7 @@ const authUser=async(req,res)=>{
 const uploader = require('cloudinary').v2
 const changeDp= async(req,res)=>{
   try {
-    console.log("g")
+    // console.log("g")
     const id=  req?.userId
   if(!req.file){
   return res.status(404).json({message:"no file"})

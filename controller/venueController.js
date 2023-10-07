@@ -151,6 +151,7 @@ try {
         decor,
         alcohol,
         dj,
+        show:true
       },
     }
   );

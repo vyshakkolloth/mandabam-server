@@ -3,6 +3,7 @@ const userRoutes = require('../controller/userController')
 const chatController= require("../controller/chatController")
 const bookingController=require("../controller/bookingController")
 const reviewController=require("../controller/ReviewController")
+const ReportController=require("../controller/ReportController")
 const{userProtect}=require("../Middleware/auth")
 
 
@@ -48,4 +49,5 @@ router.post("/paymentVerify",userProtect,bookingController.paymentVerify)
 router.post("/datePicker",userProtect,userRoutes.datePicker)
 router.post("/postReview",userProtect,reviewController.postReview)
 router.get("/getReview/:id",reviewController.getReview)
+router.post("/ReportVenue",userProtect,ReportController.postReport)
 module.exports = router

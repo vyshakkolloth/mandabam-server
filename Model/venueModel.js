@@ -49,7 +49,11 @@ type:Boolean
   catering:{type:String},
   decor:{type:String},
   alcohol:{type:String},
-  dj:{type:String}
+  dj:{type:String},
+  timestamp: {
+    type: Date,
+    default: Date.now
+}
 
 });
 const model = mongoose.model("Venuedata", Venue);

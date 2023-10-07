@@ -32,6 +32,9 @@ const User = new mongoose.Schema({
     ,loggedType:{
         type:String,
         enum: ["google","otp","email"],
+    },timestamp: {
+        type: Date,
+        default: Date.now
     }
 
     
