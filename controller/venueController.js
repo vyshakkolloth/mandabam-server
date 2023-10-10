@@ -174,7 +174,7 @@ const VenueGallery=async(req,res)=>{
     const uploadedFiles = req.files;
     const id = req.Venue_id;
     let uploadedImages = [];
-    // console.log(req.files)
+    console.log(req.files)
     if (uploadedFiles) {
       for (const file of uploadedFiles) {
         const upload = await cloudinary.uploader.upload(file.path);

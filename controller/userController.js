@@ -122,43 +122,30 @@ const venueDetail= async(req,res)=>{
   try {
    
     const id = req.params.id;
-    //  console.log(id ,"id")
+   if(id){
+
     const data = await VenueModel.findById({_id:id})
     if(data){
       res.json({status:200,message:"all good",data:data})
     }else{
       res.json({status:401,message:"venue Not fount"})
-    }
+    } 
+
+   }
+   else{
+    res.status(404).json({message:"no id recived"})
+   }
+   
     
   } catch (error) {
-    console.log(error,"+++err message")
+    console.log(error,"VenueDetail")
 
     res.status(200).json({status:401,error:error})
     
   }
 }
   
-const booking=async(req,res)=>{
-  try {
-   
-   const id=  req?.userId
-    const {venueId,userId,data}=req.body
-    const{name,email,guest,type,Phone,date,rooms,time}=data
-   
-    await BookingModel.create({
-      venueId,userId:id,name,email,guest,type,Phone,room:rooms,time,date
-    })
 
-
-
-
-
-    res.json({status:200,message:"all good",auth:true})
-  } catch (error) {
-    console.log(error)
-    res.status("401").json({message:error})
-  }
-}
 const profile= async (req,res)=>{
 
   try {
@@ -410,7 +397,7 @@ const datePicker=async(req,res)=>{
     res.status(500).json({message:"userList error", error:error})
   }
 }
-module.exports = { login, signup,venueDetail,booking ,userList,profile,
+module.exports = { login, signup,venueDetail ,userList,profile,
   enquire,search,password,datePicker,
   authUser,changeDp,forgotPassword,changePassword,sentMessage};
 

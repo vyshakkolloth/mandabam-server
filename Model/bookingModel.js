@@ -6,7 +6,7 @@ const Booking = new mongoose.Schema({
             require: true
         
         
-    },
+    },booking:[{
      userId:{
         type: mongoose.Schema.Types.ObjectId,
             ref: 'userdata',
@@ -62,7 +62,12 @@ const Booking = new mongoose.Schema({
 
     },paymentId:{
         type:String
+    },timestamp: {
+        type: Date,
+        default: Date.now
     }
+
+},]
 
     
 })

@@ -89,6 +89,8 @@ const { emit } = require('process');
 
 mongoose.set('strictQuery',true)
 mongoose.connect(process.env.mongo).then(()=>console.log("mongoose connected"))
+// mongoose.set('strictQuery',true)
+// mongoose.connect(process.env.mongo).then(console.log("connected"))//mongodb://127.0.0.1:27017/example
 
 
 

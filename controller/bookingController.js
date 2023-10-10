@@ -5,6 +5,64 @@ const crypto = require("crypto")
 
 const BookingModel= require("../Model/bookingModel")
 
+const booking=async(req,res)=>{
+	try {
+	 
+	 const id=  req?.userId
+	  const {venueId,userId,data}=req.body
+	  const{name,email,guest,type,Phone,date,rooms,time}=data
+	 
+	  const existingBooking =await BookingModel.findOne({venueId})
+	  console.log(existingBooking,"ee")
+	  if(existingBooking){
+		existingBooking.booking.push({
+			userId,
+			name,
+			email,
+			guest,
+			type,
+			Phone,
+			date,
+			room: rooms,
+			time,
+		  });
+		  const result=  await existingBooking.save();
+		console.log("already ther",result)
+	  }else{
+
+		await BookingModel.create({
+			venueId,
+			
+			booking: [
+			  {
+				userId:id,
+				name,
+				email,
+				guest,
+				type,
+				Phone,
+				date,
+				room: rooms,
+				time,
+			  },
+			],
+		  });
+
+		console.log("new data added")
+	  }
+	 
+  
+  
+  
+  
+  
+	  res.json({status:200,message:"all good",auth:true})
+	} catch (error) {
+	  console.log(error)
+	  res.status("401").json({message:error})
+	}
+  }
+
 
 
 const acceptEnquire= async(req,res)=>{
@@ -103,5 +161,5 @@ const paymentVerify=async(req,res)=>{
 
 
 
-module.exports = { bookedVenue,acceptEnquire,paymentCreate,paymentVerify};
+module.exports = {booking, bookedVenue,acceptEnquire,paymentCreate,paymentVerify};
  
