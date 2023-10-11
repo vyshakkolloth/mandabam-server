@@ -6,7 +6,9 @@ const Booking = new mongoose.Schema({
             require: true
         
         
-    },booking:[{
+    },
+    // booking:[{
+
      userId:{
         type: mongoose.Schema.Types.ObjectId,
             ref: 'userdata',
@@ -67,7 +69,7 @@ const Booking = new mongoose.Schema({
         default: Date.now
     }
 
-},]
+// },]
 
     
 })

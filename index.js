@@ -18,7 +18,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 const io=new Server(server,{
   cors: {
-    origin:"http://localhost:5173",
+    origin:process.env.CORS,
     methods:["GET","POST"]
   }
 })

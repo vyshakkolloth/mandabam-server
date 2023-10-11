@@ -165,7 +165,7 @@ const profile= async (req,res)=>{
 const enquire=async(req,res)=>{
   try {
     const id=  req?.userId
-    const data=await  BookingModel.find({userId:id,payment: false })
+    const data=await  BookingModel.find({"bokking.userId":id,payment: false })
     // console.log(data)
     if(!data.length==0){
       console.log("approve")
