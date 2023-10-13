@@ -308,7 +308,7 @@ const userList= async(req,res)=>{
     const id = req.Venue_id;
     const result= await ChatModel.find({venue:id}).populate({
       path: "user",
-      select: "name" 
+      select: "name image" 
     })
     // console.log(result,"res");
     res.status(200).json({message:"je",data:result})

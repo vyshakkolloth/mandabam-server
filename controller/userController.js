@@ -364,16 +364,18 @@ const userList=async(req,res)=>{
   try {
     // console.log("yew");
     const id=  req?.userId
-    const data=await ChatModel.find({user:id}).populate({
-      path: "venue",
-      select: "name image"// Replace fieldName1 and fieldName2 with the actual fields you want to retrieve
-    })
-    .exec();
-    // console.log(data);
-    if(data){
-      res.status(200).json({message:"userList",data:data})
-    }else{
-      res.status(202).json({message:"no data"})
+    if(id){
+      const data=await ChatModel.find({user:id}).populate({
+        path: "venue",
+        select: "name image"// Replace fieldName1 and fieldName2 with the actual fields you want to retrieve
+      })
+      .exec();
+      // console.log(data);
+      if(data){
+        res.status(200).json({message:"userList",data:data})
+      }else{
+        res.status(202).json({message:"no data"})
+      }
     }
    
   } catch (error) {
