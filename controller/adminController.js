@@ -315,8 +315,7 @@ const getBanner=async(req,res)=>{
 }
 const postBanner=async(req,res)=>{
   try {
-// console.log(req.file,"file")
-// console.log(req.body,"body")
+
 const{head,text}=req.body
     if(req.file){
       const pathfi=req.file.path

@@ -3,22 +3,23 @@ const router = express.Router()
 const{venueProtect}=require("../Middleware/auth")
 const venuController = require('../controller/venueController')
 const bookinController=require("../controller/bookingController")
+const  upload  = require('../utils/multer')
 
 
-const multer = require('multer');
-const path = require('path');
+// const multer = require('multer');
+// const path = require('path');
 
-const storage = multer.diskStorage({
-    destination: function (req, file, cb) {
-          cb(null, path.join(__dirname, '../public/images')) //cb(null, "uploads");
-    },
-    filename: function (req, file, cb) {
-        cb(null, Date.now() + '-' + file.originalname)
-    }
-})
-const upload = multer({
-    storage: storage,
-})
+// const storage = multer.diskStorage({
+//     destination: function (req, file, cb) {
+//           cb(null, path.join(__dirname, '../public/images')) //cb(null, "uploads");
+//     },
+//     filename: function (req, file, cb) {
+//         cb(null, Date.now() + '-' + file.originalname)
+//     }
+// })
+// const upload = multer({
+//     storage: storage,
+// })
 
 
 

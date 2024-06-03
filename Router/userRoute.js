@@ -5,22 +5,23 @@ const bookingController=require("../controller/bookingController")
 const reviewController=require("../controller/ReviewController")
 const ReportController=require("../controller/ReportController")
 const{userProtect}=require("../Middleware/auth")
+const  upload  = require('../utils/multer')
 
 
-const multer = require('multer');
-const path = require('path');
+// const multer = require('multer');
+// const path = require('path');
 
-const storage = multer.diskStorage({
-    destination: function (req, file, cb) {
-          cb(null, path.join(__dirname, '../public/images')) //cb(null, "uploads");
-    },
-    filename: function (req, file, cb) {
-        cb(null, Date.now() + '-' + file.originalname)
-    }
-})
-const upload = multer({
-    storage: storage,
-})
+// const storage = multer.diskStorage({
+//     destination: function (req, file, cb) {
+//           cb(null, path.join(__dirname, '../public/images')) //cb(null, "uploads");
+//     },
+//     filename: function (req, file, cb) {
+//         cb(null, Date.now() + '-' + file.originalname)
+//     }
+// })
+// const upload = multer({
+//     storage: storage,
+// })
 
 
 const router = express.Router()
@@ -50,5 +51,6 @@ router.post("/datePicker",userProtect,userRoutes.datePicker)
 router.post("/postReview",userProtect,reviewController.postReview)
 router.get("/getReview/:id",reviewController.getReview)
 router.post("/ReportVenue",userProtect,ReportController.postReport)
+// router.post("/linked",userRoutes.linkedList)
 
 module.exports = router

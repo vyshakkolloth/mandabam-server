@@ -399,8 +399,46 @@ const datePicker=async(req,res)=>{
     res.status(500).json({message:"userList error", error:error})
   }
 }
+const linkedList=async(req,res)=>{
+  try{
+    let number=req?.body?.data?.number
+    class node{
+      constructor(value){
+        this.value=value
+        this.next=null
+      }
+    }
+    class LinkedList{
+      constructor(){
+        this.head=null
+      }
+      append(value){
+        const newNode= new node(data)
+        if(!this.head){
+          this.head=newNode
+          return
+        }
+        let currnode=this.head
+          while(currnode.next){
+            currnode=currnode.next
+            
+          }
+          currnode=newNode
+        
+
+      }
+
+    }
+    
+
+  }
+  catch(error){
+    res.status(500).json({message:"fail server"})
+  }
+}
+
 module.exports = { login, signup,venueDetail ,userList,profile,
-  enquire,search,password,datePicker,
+  enquire,search,password,datePicker,linkedList,
   authUser,changeDp,forgotPassword,changePassword,sentMessage};
 
 
