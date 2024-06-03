@@ -60,7 +60,7 @@ const signup = async (req, res) => {
     const nameregex = /\s/g;
     const emailregex = /^\w+@[a-zA-Z_]+?\.[a-zA-Z]{2,3}$/;
    
-    const passwordregex = /^[0-9]*$/;
+    const passwordregex = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/
     // console.log(req.body.data.phone);
 
     const { email, phone, name, password } = req.body.data;
@@ -68,19 +68,19 @@ const signup = async (req, res) => {
     const repeat = await UserModel.findOne({ email: email });
 
     if (repeat) {
-      return res.json({ status: 400, message: "user already exist" });
+      return res.json({ status: 400, message: "Email already exist" });
     }
 
-    if (name.length <= 4) {
-      return res.json({ status: 400, message: "name is not valied" });
+    if (name.length <= 3) {
+      return res.json({ status: 400, message: "Name must be minumium 3 character" });
     }
 
     if (nameregex.test(name)) {
-      return res.json({ status: 400, message: " Name must be letters" });
+      return res.json({ status: 400, message: " Name must be Albhabet" });
     }
 
     if (!emailregex.test(email)) {
-      return res.json({ status: 400, message: "  valied email is required" });
+      return res.json({ status: 400, message: " Enter valied email " });
     }
 
     if (phone.length <= 9) {
@@ -92,7 +92,7 @@ const signup = async (req, res) => {
     }
 
     if (!passwordregex.test(password)) {
-      return res.json({ status: 400, message: "  enter valied details" });
+      return res.json({ status: 400, message: "Minimum eight characters, at least one letter, one number and one special character" });
     }
 
     if (password.length < 3) {
