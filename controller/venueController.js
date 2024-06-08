@@ -15,23 +15,23 @@ const signUp = async (req, res) => {
 
     // console.log(req.body.data)
     console.log(Vname)
-    const nameregex = /\s/g;
+    const nameregex =  /^[\s\S]*$/;
     const emailregex = /^\w+@[a-zA-Z_]+?\.[a-zA-Z]{2,3}$/;
     // const mobileregex = /^[0-9]*$/;
-    const passwordregex = /^[0-9]*$/;
+    const passwordregex =  /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/
 
-    if (Vname.length <= 4) {
-      res.json({ status: 400, message: "data name dont match requirment" });
+    if (Vname.length <= 3) {
+      res.json({ status: 400, message: "Name length should be more than 3" });
     } else if (nameregex.test(Vname)) {
-      res.json({ status: 400, message: "data dont name match requirment" });
+      res.json({ status: 400, message: "name without space" });
     } else if (!emailregex.test(email)) {
       res.json({ status: 400, message: "data dont email match requirment" });
     } else if (phone.length <= 9) {
       res.json({ status: 400, message: "data dont mobile match requirment" });
     } else if (!passwordregex.test(password)) {
-      res.json({ status: 400, message: "data dont pas match requirment" });
+      res.json({ status: 400, message: "Minimum eight characters, at least one letter, one number and one special character" });
     } else if (password.length < 3) {
-      res.json({ status: 400, message: "data dont pas 2match requirment" });
+      res.json({ status: 400, message: "password length is short" });
     } else {
       const salt = await bcrypt.genSalt(10);
       const hashPassword = await bcrypt.hash(password.trim(), salt);

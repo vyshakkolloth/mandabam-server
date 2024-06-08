@@ -57,7 +57,7 @@ const login = async (req, res) => {
 
 const signup = async (req, res) => {
   try {
-    const nameregex = /\s/g;
+    const nameregex =  /^[\s\S]*$/;
     const emailregex = /^\w+@[a-zA-Z_]+?\.[a-zA-Z]{2,3}$/;
    
     const passwordregex = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/
