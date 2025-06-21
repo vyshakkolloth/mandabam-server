@@ -56,8 +56,10 @@ const login = async (req, res) => {
 };
 
 const signup = async (req, res) => {
+  console.log(req.body);
   try {
-    const nameregex =  /^[\s\S]*$/;
+  const nameregex = /^[A-Za-z\s]{2,50}$/;
+
     const emailregex = /^\w+@[a-zA-Z_]+?\.[a-zA-Z]{2,3}$/;
    
     const passwordregex = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/
@@ -75,7 +77,7 @@ const signup = async (req, res) => {
       return res.json({ status: 400, message: "Name must be minumium 3 character" });
     }
 
-    if (nameregex.test(name)) {
+    if (!nameregex.test(name)) {
       return res.json({ status: 400, message: " Name must be Albhabet" });
     }
 
