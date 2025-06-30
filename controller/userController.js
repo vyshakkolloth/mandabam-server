@@ -6,7 +6,7 @@ const BookingModel=require("../Model/bookingModel")
 const cloudinary= require("../config/config")
 const UserModel = require("../Model/userModel");
 const bcrypt = require("bcrypt");
-const ChatModel= require("../Model/chatSchema")
+const ChatModel= require("../Model/chatSchema");
 
 //--------------------------
 const login = async (req, res) => {
@@ -112,7 +112,7 @@ const signup = async (req, res) => {
 
     return res.json({ status: 200, message: "all good" });
   } catch (err) {
-    console.log(err + "555");
+    
     return res.json({ status: 401, message: "Server error" });
   }
 };
@@ -196,13 +196,25 @@ const search=async(req,res)=>{
       res.status(200).json({data:data,message:"data is avalialbe"})
     }else{
       // console.log("false")
-      res.status(404).json({data:null,message:"data noe found"})
+      res.status(404).json({data:null,message:"data not found"})
     }
     
    
   } catch (error) {
     console.log(error,"++search result")
     res.status("401").json({message:error})
+  }
+}
+
+const venues= async(req,res)=>{
+  try {
+    
+    const data =await VenueModel.find().limit(4)
+   
+    res.status(200).json({data,message:"data found"})
+    
+  } catch (error) {
+    
   }
 }
 
@@ -440,7 +452,7 @@ const linkedList=async(req,res)=>{
 }
 
 module.exports = { login, signup,venueDetail ,userList,profile,
-  enquire,search,password,datePicker,linkedList,
+  enquire,search,password,datePicker,linkedList,venues,
   authUser,changeDp,forgotPassword,changePassword,sentMessage};
 
 
